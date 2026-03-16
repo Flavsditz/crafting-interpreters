@@ -63,3 +63,8 @@ Some languages don't do all the above. One can also:
 ## Compiler vs Interpreter
 Compiler takes code input and produces another (usually a lower-level) form. (transpilation falls under this too).
 Interpreting means we take in source code and execute it immediately.
+
+
+## General notes
+- **Maximal munch** - when two (lexical grammar) rules can match a chunk of code being analyzed by the scanner, whichever one matches __the most characters__ wins.
+

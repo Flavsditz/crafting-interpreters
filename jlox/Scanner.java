@@ -6,9 +6,33 @@ import java.util.Map;
 class Scanner {
 	private final String source;
 	private final List<Token> tokens = new ArrayList<>();
+
 	private int start = 0;
 	private int current = 0;
 	private int line = 0;
+
+	private static final Map<String, TokenType> keywords;
+	
+	static {
+		keywords = new HashMap<>();
+		keywords.put("and", AND);
+		keywords.put("class", CLASS);
+		keywords.put("else", ELSE);
+		keywords.put("false", FALSE);
+		keywords.put("for", FOR);
+		keywords.put("fun", FUN);
+		keywords.put("if", IF);
+		keywords.put("nil", NIL);
+		keywords.put("or", OR);
+		keywords.put("print", PRINT);
+		keywords.put("return", RETURN);
+		keywords.put("super", SUPER);
+		keywords.put("this", THIS);
+		keywords.put("true", TRUE);
+		keywords.put("var", VAR);
+		keywords.put("while", WHILE);
+	}
+
 
 	Scanner(String source) {
 		this.source = source;
@@ -75,13 +99,30 @@ class Scanner {
 				// Adding the number case in here to avoid a "case" for each digit 
 				if(isDigit(c)) {
 					number()
-				} else{
+				} else if (isAlhpa(c)){
+					identifier();
+			}else {
 					//TODO: improvement to show what char and where.
 					//TODO: improvement to get all invalid values that come sequentially and log the error once.
 					Lox.error(line, "Unexpected character."); 
 				}
 				break;
 		}
+	}
+
+	private void identifier() {
+		while(isAlphaNumeric(peek())){
+			advance();
+		}
+
+		String text = source.substring(start, current);
+		TokenType type = keywords.get(text);
+
+		if(type == null){
+			type = IDENTIFIER;
+		}
+
+		addToken(type);
 	}
 
 	private void number() {
@@ -152,6 +193,16 @@ class Scanner {
 		}
 
 		return source.charAt(current + 1);
+	}
+
+	private boolean isAlhpa(char c){
+		return ( c >= 'a' && c <= 'z' ) ||
+			   ( c >= 'A' && c <= 'Z' ) ||
+		         c == '_';
+	}
+
+	private boolean isAlphaNumeric(char c) {
+		return isAlpha(c) || isDigit(c);
 	}
 	
 	private boolean isDigit(char c){
