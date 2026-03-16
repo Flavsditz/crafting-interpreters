@@ -1,7 +1,11 @@
+package org.fdiez;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.fdiez.TokenType.*;
 
 class Scanner {
 	private final String source;
@@ -98,10 +102,10 @@ class Scanner {
 			default:
 				// Adding the number case in here to avoid a "case" for each digit 
 				if(isDigit(c)) {
-					number()
-				} else if (isAlhpa(c)){
+					number();
+				} else if (isAlpha(c)){
 					identifier();
-			}else {
+				} else {
 					//TODO: improvement to show what char and where.
 					//TODO: improvement to get all invalid values that come sequentially and log the error once.
 					Lox.error(line, "Unexpected character."); 
@@ -195,7 +199,7 @@ class Scanner {
 		return source.charAt(current + 1);
 	}
 
-	private boolean isAlhpa(char c){
+	private boolean isAlpha(char c){
 		return ( c >= 'a' && c <= 'z' ) ||
 			   ( c >= 'A' && c <= 'Z' ) ||
 		         c == '_';
@@ -206,7 +210,7 @@ class Scanner {
 	}
 	
 	private boolean isDigit(char c){
-		return c >= "0" && c <= "9";
+		return c >= '0' && c <= '9';
 	}
 
 	private char advance() {
